@@ -55,7 +55,7 @@ def detect_stars(data: np.ndarray, cfg: DetectionConfig, fwhm: float,
     table = finder(data - median)
     if table is None or len(table) == 0:
         return np.empty((0, 2)), np.empty(0)
-    x, y = np.asarray(table["xcentroid"]), np.asarray(table["ycentroid"])
+    x, y = np.asarray(table["x_centroid"]), np.asarray(table["y_centroid"])
     peak = np.asarray(table["peak"])
     x0, y0, x1, y1 = region
     keep = (x >= x0) & (x <= x1) & (y >= y0) & (y <= y1) & (peak >= cfg.threshold_sigma * std)  # drop noise peaks
