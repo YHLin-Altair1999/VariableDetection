@@ -1,0 +1,83 @@
+# VariableDetection configuration. Every key is optional; values shown are the defaults.
+# Keys that are commented out default to "unset" (TOML has no null).
+# Copy this file and edit what you need; load it with `variabledetection.load_config(path)`.
+
+[data]
+# Layout: <root>/<target_name>/<reduced_subdir>/<file_pattern>
+reduced_subdir = "reduced"
+file_pattern = "*.fits"
+output_subdir = "output_light_curves"
+# Header keywords tried in order to get the observation time (JD, MJD-OBS or DATE-OBS).
+time_keywords = ["JD", "MJD-OBS", "DATE-OBS"]
+# Used to shift DATE-OBS (start of exposure) to mid-exposure.
+exposure_keyword = "EXPTIME"
+
+[camera]
+# Camera gain in e-/ADU. Needed for correct photon-noise error bars.
+gain = 1.0
+
+[detection]
+threshold_sigma = 5.0       # source detection threshold above background rms
+# fwhm = 4.0                # nominal stellar FWHM in px; unset = measured (see [psf])
+edge_buffer = 50            # px kept free of stars at every frame edge
+max_elongation = 2.0        # reject elongated sources (blends, trails)
+# saturation_adu = 60000    # reject stars with peak above this; unset = disabled
+
+[registration]
+reference_frame = "auto"    # "auto" or a frame index (frames sorted by time)
+max_control_points = 50     # brightest sources handed to astroalign
+min_matches = 8             # minimum matched stars for a valid registration
+max_scale_deviation = 0.02  # reject transforms whose scale differs from 1 by more
+min_region_fraction = 0.8   # try to keep this fraction of the reference frame area...
+max_dropped_fraction = 0.2  # ...by dropping at most this fraction of frames
+
+[photometry]
+method = "sep"              # "sep", "aperture" or "psf"
+aperture_mode = "fixed"     # "fixed": one radius from the median FWHM; "per_frame": radius follows each frame's FWHM
+# aperture_radius = 8.0     # px (fixed mode only); unset = aperture_fwhm_factor * FWHM
+aperture_fwhm_factor = 2.0
+aperture_min = 3.0
+aperture_max = 20.0
+annulus_gap = 2.0           # sky annulus inner radius = aperture radius + gap
+annulus_width = 6.0
+min_annulus_pixels = 20
+psf_fit_shape = 11          # fit box (px) for method = "psf"
+
+[psf]
+# Per-frame PSF width, used for the aperture size and (optionally) to reject poor-seeing frames.
+fwhm_method = "sep"         # "sep" = half-light radius; "photutils" = Gaussian PRF fit (slower)
+n_stars = 20                # brightest (isolated, for "photutils") stars used per frame
+fit_shape = 15              # fit box (px) for "photutils"
+# max_fwhm_factor = 1.5     # drop frames whose FWHM exceeds this multiple of the median; unset = keep all
+
+[normalization]
+brightness_window_dex = 0.5       # comparison stars within this many dex of the target
+max_comparison_distance = 300.0   # px; 0 = no limit
+blend_radius_factor = 2.0         # blended if a neighbour is within factor * aperture radius
+ensemble_sigma_clip = 3.0
+max_ensemble_iterations = 3       # re-normalise excluding flagged stars from the ensemble
+
+[variability]
+slope_sigma_threshold = 5.0   # slope outlier threshold in population sigmas
+f_threshold = 50.0            # F-test (quadratic vs linear) threshold
+autocorr_threshold = 5.0      # min z-score of residual autocorrelation over all lags
+autocorr_max_lag = 5
+sigma_clip = 3.0
+min_points = 10
+plot_flagged = true
+
+[platesolve]
+# Online astrometry.net solve of the reference frame -> RA/Dec of flagged stars.
+enabled = false
+api_key_env = "ASTROMETRY_API_KEY"   # name of the environment variable holding the key
+max_sources = 100
+solve_timeout = 300                  # seconds
+# scale_lower = 0.5                  # arcsec/px hints
+# scale_upper = 2.0
+# ra_hint = 83.8                     # deg
+# dec_hint = -5.4                    # deg
+radius_hint = 1.0                    # deg, used with ra_hint/dec_hint
+
+[output]
+frame_plots = 5      # number of annotated aperture frame plots to save
+dpi = 200

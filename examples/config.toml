@@ -1,0 +1,21 @@
+# Example configuration for 02_batch_with_config.py. Every key is optional; anything not listed
+# keeps its default. The full list of options is in src/variabledetection/config.default.toml.
+
+[data]
+reduced_subdir = "reduced"
+file_pattern = "*.fits"
+
+[camera]
+gain = 0.28            # e-/ADU
+
+[photometry]
+method = "sep"
+aperture_mode = "fixed"
+
+[variability]
+f_threshold = 50.0
+autocorr_threshold = 5.0
+autocorr_max_lag = 5
+
+[platesolve]
+enabled = false

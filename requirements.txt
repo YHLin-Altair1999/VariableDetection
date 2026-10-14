@@ -1,0 +1,9 @@
+numpy
+scipy
+astropy
+matplotlib
+photutils>=2.0
+sep
+astroalign
+auto-stretch
+astroquery
