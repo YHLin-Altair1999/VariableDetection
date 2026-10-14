@@ -51,7 +51,8 @@ def detect_stars(data: np.ndarray, cfg: DetectionConfig, fwhm: float,
     Returns (xy (n, 2), peak (n,)) ordered as detected.
     """
     _, median, std = sigma_clipped_stats(data, sigma=3.0)
-    finder = DAOStarFinder(fwhm=max(fwhm, 2.0), threshold=cfg.threshold_sigma * std)
+    finder = DAOStarFinder(fwhm=max(fwhm, 2.0), threshold=cfg.threshold_sigma * std,
+                           sharpness_range=(0.2, 3.0), roundness_range=(-1.0, 1.0))  # default sharphi=1.0 rejects real stars
     table = finder(data - median)
     if table is None or len(table) == 0:
         return np.empty((0, 2)), np.empty(0)
