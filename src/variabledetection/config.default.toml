@@ -4,7 +4,7 @@
 
 [data]
 # Layout: <root>/<target_name>/<reduced_subdir>/<file_pattern>
-reduced_subdir = "reduced"
+reduced_subdir = "REDUCED_DATA"
 file_pattern = "*.fits"
 output_subdir = "output_light_curves"
 # Header keywords tried in order to get the observation time (JD, MJD-OBS or DATE-OBS).

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-
 import astropy.io.fits as fits
 import numpy as np
 from astropy.time import Time
